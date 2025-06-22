@@ -1,0 +1,77 @@
+{% extends "index.html" %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>About Me</h1>
+        <p>Get to know me better - my story, interests, and what drives me</p>
+    </div>
+</section>
+
+<section class="about-detailed">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <div class="profile-section">
+                    <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="Fei Lin"
+                        class="about-profile-img">
+                    <div class="profile-info">
+                        <h2>Fei Lin</h2>
+                        <p class="title">Software Engineer | MLH Fellow</p>
+                        <p class="location"><i class="fas fa-map-marker-alt"></i> New York City, New York</p>
+                    </div>
+                </div>
+
+                <div class="story-section">
+                    <h3>My Background</h3>
+                    <p>
+                        I'm currently a computer science student and MLH Fellow, passionate about software
+                        engineering and building impactful technology solutions. My journey in programming
+                        started in high school when I built my first website, and since then, I've been
+                        fascinated by the power of code to solve real-world problems.
+                    </p>
+
+                    <p>
+                        As an MLH Fellow, I'm gaining hands-on experience in production engineering,
+                        working on open source projects, and collaborating with talented developers
+                        from around the world. This program has been instrumental in developing my
+                        technical skills and understanding of software development best practices.
+                    </p>
+
+                    <p>
+                        When I'm not coding, you can find me exploring new places, taking photographs,
+                        or gaming. I believe in maintaining a healthy work-life balance and
+                        finding inspiration from diverse experiences.
+                    </p>
+                </div>
+
+                <div class="values-section">
+                    <h3>What I Value</h3>
+                    <div class="values-grid">
+                        <div class="value-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <h4>Innovation</h4>
+                            <p>Always looking for creative solutions to complex problems</p>
+                        </div>
+                        <div class="value-item">
+                            <i class="fas fa-users"></i>
+                            <h4>Collaboration</h4>
+                            <p>Believing that the best solutions come from diverse perspectives</p>
+                        </div>
+                        <div class="value-item">
+                            <i class="fas fa-book"></i>
+                            <h4>Continuous Learning</h4>
+                            <p>Staying curious and always eager to learn new technologies</p>
+                        </div>
+                        <div class="value-item">
+                            <i class="fas fa-heart"></i>
+                            <h4>Impact</h4>
+                            <p>Building technology that makes a positive difference in people's lives</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
