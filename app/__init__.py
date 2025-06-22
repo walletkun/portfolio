@@ -87,9 +87,35 @@ TECHNOLOGIES = [
 
 
 
+PROJECTS = [
+    {
+        'title': 'Alexandria Digital Library',
+        'role': 'Full Stack Developer',
+        'description': '',
+        'link': '',
+    },
+    {
+        'title': 'Emotionfy',
+        'role': "Full Stack and ML Engineer",
+        'description': "",
+        'link': ''
+    },
+]
+
+
+
+
 
 
 
 @app.route('/')
 def index():
-    return render_template('index.html', title="MLH Fellow", url=os.getenv("URL"))
+    return render_template('index.html', 
+                           title="Fei Lin - MLH Fellow", 
+                           work_experiences=WORK_EXPERIENCES[:2],
+                           education=EDUCATION,
+                           url=os.getenv("URL"))
+
+
+
+
