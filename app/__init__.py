@@ -10,24 +10,24 @@ WORK_EXPERIENCES = [{
         'title': "Full Stack Developer Intern",
         'company': "ERBuddy Inc.",
         'duration': "June 2025 - On going",
-        'description' : "Developed 5+ reusable React Native components reducing code duplication by 60% and improving development \
-    velocity. Built comprehensive symptom tracking feature supporting 6 core symptoms with drag-to-prioritize functionality, \
-    enabling users to log health data 50% faster. Implemented dynamic medication reminder system serving 100% of user pill schedules with real-time status \
-    updates. Resolved 10+ UI/UX bugs including text overflow and layout spacing issues within 2-week sprint cycles.",
+        'description' : ["Developed 5+ reusable React Native components reducing code duplication by 60% and improving development \
+    velocity.", "Built comprehensive symptom tracking feature supporting 6 core symptoms with drag-to-prioritize functionality enabling users to log health data 50% faster.", 
+    "Implemented dynamic medication reminder system serving 100% of user pill schedules with real-time status \
+    updates.", "Resolved 10+ UI/UX bugs including text overflow and layout spacing issues within 2-week sprint cycles."],
     },
     {
         'title': "Site Reliability Engineer Fellow",
         'company': "META & MLH Fellowship",
         'duration': "June 2025 - On going",
-        'description': "Still on going"
+        'description': ["Still on going"]
     },
     {
         'title': "Software Engineer Fellow",
         "company": "Cuny Tech Prep",
         'duration': "October 2024 - May 2025",
-        'description': "1 of 170 students selected for a Data Science and Software Engineering fellowship designed to jumpstart careers in tech,Engaged in weekly courses to learn and apply industry best practices, including MVC architecture, version control with \
-Git/GitHub, Agile & Scrum methodologies using Trello and Slack, test-driven development (TDD), and CI/CD pipelines \
-Implemented a CNN-based facial recognition to analyze user emotions to create an AI-powered song recommendation system"
+        'description': ["1 of 170 students selected for a Data Science and Software Engineering fellowship designed to jumpstart careers in tech","Engaged in weekly courses to learn and apply industry best practices, including MVC architecture, version control with \
+Git/GitHub, Agile & Scrum methodologies using Trello and Slack, test-driven development (TDD), and CI/CD pipelines",
+"Implemented a CNN-based facial recognition to analyze user emotions to create an AI-powered song recommendation system"]
     },
 ]
 
@@ -36,15 +36,15 @@ LEADERSHIP_EXPERIENCES = [
         'title': "Basta Fellow",
         'company': "Basta",
         "duration": "May 2025 - On going",
-        'description': "Selected to participate in a rigorous 10-week career prep fellowship program followed by ongoing weekly coaching designed to support first-generation college students in landing a great entry-level position",
+        'description': ["Selected to participate in a rigorous 10-week career prep fellowship program followed by ongoing weekly coaching designed to support first-generation college students in landing a great entry-level position"],
         },
         {
             'title': "Software Engineer Fellow",
             "company": "Google X Basta",
             'duration': "January 2025 - May 2025",
-            "description": "Selected as one of 1200+ applicants to participate in developing advanced solutions for complex algorithmic problems and \
-            mock interviews to enhance career readiness, Achieved a high acceptance on medium-difficulty problems and increased confidence in technical interview performance by \
-            completing data structures and algorithm challenges on code signal in one month"
+            "description": ["Selected as one of 1200+ applicants to participate in developing advanced solutions for complex algorithmic problems and \
+            mock interviews to enhance career readiness" , "Achieved a high acceptance on medium-difficulty problems and increased confidence in technical interview performance by \
+            completing data structures and algorithm challenges on code signal in one month"]
         },
 ]
 
@@ -53,14 +53,14 @@ ACTIVITIES = [
         "title": "Campus Advocate",
         'company': "Defang",
         "duration" : "March 2025 - On going",
-        "description": "Selected as a Defang Campus Advocate to promote cloud-native development, streamlined cloud deployments, and advocate \
-        for modern cloud deployment practices to students and developers"
+        "description": ["Selected as a Defang Campus Advocate to promote cloud-native development, streamlined cloud deployments, and advocate \
+        for modern cloud deployment practices to students and developers"]
     },
     {
         'title': "Volunteer Software Engineer",
         'company': "Ruby for good",
         'duration': "January 2025 - On going",
-        'decription': "Volunteering at Ruby for good to gain open source exposure and working consistently with senior developers during the program"
+        'description': ["Volunteering at Ruby for good to gain open source exposure and working consistently with senior developers during the program"]
     }
 ]
 
@@ -116,8 +116,17 @@ def index():
                            education=EDUCATION,
                            url=os.getenv("URL"))
 
-
-
+# About me section
 @app.route('/about_me')
 def about():
     return render_template('about.html', title='About Me')
+
+# Experience section
+@app.route('/experience')
+def experience():
+    return render_template('experience.html', 
+                           title="Fei Lin - Experience", 
+                           work_experiences=WORK_EXPERIENCES,
+                           leadership_experiences=LEADERSHIP_EXPERIENCES,
+                           activities=ACTIVITIES,
+                           url=os.getenv("URL"))

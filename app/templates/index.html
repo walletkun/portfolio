@@ -4,16 +4,19 @@
 {% block content %}
 <section class="profile">
     <div class="profile-picture">
-        <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="Fei Lin Profile Picture">
+        <img src="{{ url_for('static', filename='img/pfp.jpg') }}" alt="Fei Lin Profile Picture">
     </div>
     <h1>Fei Lin</h1>
     <p class="subtitle">MLH Fellow & Computer Science Student passionate about building impactful technology solutions
     </p>
 
     <div class="cta-buttons">
-        <a href="/about_me" class="btn-primary">
+        <a href="/about_me" class="btn-secondary">
             <i class="fas fa-user"></i>
             Learn More About Me
+        </a>
+        <a href="/experience" class="btn-primary">
+            View My Experiences
         </a>
         <a href="mailto:feilinpersonal@gmail.com" class="btn-secondary">
             <i class="fas fa-envelope"></i>
