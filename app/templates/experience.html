@@ -1,0 +1,94 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<section class="experience-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Professional Experience</h2>
+            <p>A journey through my professional growth and key contributions in software engineering and technology</p>
+        </div>
+
+        <!-- Featured Work Experiences -->
+        <div class="experience-grid">
+            {% for experience in work_experiences %}
+            <div class="experience-card">
+                <div class="experience-header">
+                    <div class="experience-title">
+                        <h3>{{ experience.title }}</h3>
+                        <div class="experience-company">{{ experience.company }}</div>
+                    </div>
+                    <div class="experience-duration">{{ experience.duration }}</div>
+                </div>
+                <div class="experience-description">
+                   <ul>
+                        {% for point in experience.description %}
+                        <li> {{ point }}</li>
+                        {% endfor %}
+                   </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Experience Categories -->
+        <div class="experience-categories">
+            <!-- Leadership Experience -->
+            <div class="experience-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Leadership</h3>
+                </div>
+                <div class="category-experiences">
+                    {% for experience in leadership_experiences %}
+                    <div class="mini-experience-card">
+                        <div class="mini-experience-header">
+                            <div class="mini-experience-title">{{ experience.title }}</div>
+                            <div class="mini-experience-company">{{ experience.company }}</div>
+                        </div>
+                        <div class="mini-experience-duration">{{ experience.duration }}</div>
+                        <div class="mini-experience-description">
+                            <ul>
+                                {% for point in experience.description %}
+                                <li>{{ point }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Activities & Volunteer Work -->
+            <div class="experience-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3>Activities & Volunteer</h3>
+                </div>
+                <div class="category-experiences">
+                    {% for activity in activities %}
+                    <div class="mini-experience-card">
+                        <div class="mini-experience-header">
+                            <div class="mini-experience-title">{{ activity.title }}</div>
+                            <div class="mini-experience-company">{{ activity.company }}</div>
+                        </div>
+                        <div class="mini-experience-duration">{{ activity.duration }}</div>
+                        <div class="mini-experience-description">
+                            <ul> 
+                                {% for point in activity.description %}
+                                <li> {{ point }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
