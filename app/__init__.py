@@ -103,8 +103,28 @@ PROJECTS = [
 ]
 
 
-
-
+HOBBIES = [
+    {
+        "name": "Snowboarding",
+        "icon": "fas fa-snowboarding",
+        "description": "Love hitting the slopes and carving through fresh powder during winter seasons!",
+    },
+    {
+        "name": "Creating Projects",
+        "icon": "fas fa-code",
+        "description": "Building innovative solutions and experimenting with new technologies in my spare time.",
+    },
+    {
+        "name": "Photography",
+        "icon": "fas fa-camera",
+        "description": "Capturing moments and beautiful landscapes through the lens of my camera.",
+    },
+    {
+        "name": "Hiking",
+        "icon": "fas fa-mountain",
+        "description": "Exploring nature trails and discovering scenic views while staying active outdoors.",
+    },
+]
 
 
 
@@ -125,8 +145,18 @@ def about():
 @app.route('/experience')
 def experience():
     return render_template('experience.html', 
-                           title="Fei Lin - Experience", 
-                           work_experiences=WORK_EXPERIENCES,
-                           leadership_experiences=LEADERSHIP_EXPERIENCES,
-                           activities=ACTIVITIES,
-                           url=os.getenv("URL"))
+                            title="Experience", 
+                            work_experiences=WORK_EXPERIENCES,
+                            leadership_experiences=LEADERSHIP_EXPERIENCES,
+                            activities=ACTIVITIES,
+                            url=os.getenv("URL"))
+
+
+# Hobbies section
+@app.route('/hobbies')
+def hobbies():
+    return render_template('hobbies.html', 
+                            title="Hobbies",
+                            hobbies=HOBBIES)
+
+    

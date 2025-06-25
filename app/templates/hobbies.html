@@ -1,0 +1,25 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+<section class="hobbies-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>My Hobbies & Interests</h2>
+            <p>When I'm not in front of my laptop this is what you will find me doing</p>
+        </div>
+
+        <div class="hobbies-grid">
+            {% for hobby in hobbies %}
+            <div class="hobby-card">
+                <div class="hobby-content">
+                    <h3>{{ hobby.name }}</h3>
+                    <p>{{ hobby.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
