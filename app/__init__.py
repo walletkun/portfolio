@@ -1,9 +1,35 @@
 import os
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
+from peewee import *
+from datetime import datetime
+from playhouse.shortcuts import model_to_dict
+
+
 
 load_dotenv()
 app = Flask(__name__)
+
+
+mydb = MySQLDatabase(os.getenv("MYSQL_DB"),
+                     user=os.getenv("MYSQL_USER"),
+                     password=os.getenv("MYSQL_PASS"),
+                     host=os.getenv("MYSQL_HOST"),
+                     port=3306)
+
+class TimelinePost(Model):
+    name = CharField()
+    email = CharField()
+    content = TextField()
+    created_at = DateTimeField(default=datetime.now())
+
+    class Meta:
+        database = mydb
+
+mydb.connect()
+mydb.create_tables([TimelinePost])
+
+
 
 
 WORK_EXPERIENCES = [{
@@ -159,4 +185,33 @@ def hobbies():
                             title="Hobbies",
                             hobbies=HOBBIES)
 
-    
+
+# add endpoint of the post timeline
+@app.route('/api/timeline_post', methods=["POST"])
+def post_timeline_post():
+    try:
+        name = request.form['name']
+        email = request.form['email']
+        content = request.form['content']
+        print(f"Parsed data - Name: {name}, Email: {email}, Content: {content}")
+
+        timeline_post = TimelinePost.create(name=name, email=email, content=content)
+        result = model_to_dict(timeline_post)
+        return result
+    except Exception as e:
+        print("Error", str(e))
+        print("Exception type:", type(e).__name__)
+        return {"error": str(e)}, 400
+
+
+
+# get end point of the time line
+@app.route('/api/timeline_post', methods=['GET'])
+def get_timeline_post():
+    return {
+        'timeline_post': [
+            model_to_dict(post) for post in TimelinePost.select().order_by(TimelinePost.created_at.desc())
+        ]
+    }
+
+
