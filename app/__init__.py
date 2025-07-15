@@ -1,14 +1,17 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, flash
 from dotenv import load_dotenv
 from peewee import *
 from datetime import datetime
 from playhouse.shortcuts import model_to_dict
-
+import re
 
 
 load_dotenv()
 app = Flask(__name__)
+# Allowing flash to work
+app.config['SECRET_KEY'] = 'your-generated-key-here'
+
 
 
 mydb = MySQLDatabase(os.getenv("MYSQL_DB"),
@@ -153,6 +156,22 @@ HOBBIES = [
 ]
 
 
+# Validation for name and email inputs
+def name_validation(name):
+    """Validating the name of user trying to comment on Guest book"""
+    if not name or len(name.strip()) < 2 or len(name.strip()) > 50:
+        return False
+
+    return re.match(r'^[a-zA-Z\s]+$', name.strip())
+
+def email_validation(email):
+    """Validating the email of user commenting on guest book"""
+    if not email:
+        return False
+
+    return re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email.strip())
+
+
 
 @app.route('/')
 def index():
@@ -185,24 +204,63 @@ def hobbies():
                             title="Hobbies",
                             hobbies=HOBBIES)
 
+# Time line blog section
+@app.route("/timeline")
+def timeline():
+    # Getting all the guest book comments in descending order
+    timeline_posts = TimelinePost.select().order_by(TimelinePost.created_at.desc())
+    return render_template("timeline.html", title="Guestbook", timeline_posts=timeline_posts)
+
 
 # add endpoint of the post timeline
 @app.route('/api/timeline_post', methods=["POST"])
 def post_timeline_post():
     try:
-        name = request.form['name']
-        email = request.form['email']
-        content = request.form['content']
-        print(f"Parsed data - Name: {name}, Email: {email}, Content: {content}")
+        name = request.form.get('name', "").strip()
+        email = request.form.get('email', "").strip()
+        content = request.form.get('content', "").strip()
 
+
+        print(f"Name: '{name}', Email: '{email}', Content: '{content}'")
+        print(f"Content length: {len(content)}")
+
+
+        # validation
+        errors = []
+        if not name_validation(name):
+            errors.append("Name should only contain letters and spaces (2-50 characters)")
+
+        if not email_validation(email):
+            errors.append("Please enter a valid email address")
+
+        if not content or len(content) < 5:
+            errors.append("Message must be at least 5 characters long")
+
+        print(f"Validation errors: {errors}")
+
+        # if any error was caught we will flash it
+        if errors:
+            for error in errors:
+                flash(error, 'error')
+
+            # Don't refresh the page when error was encountered we'll render with content preserved
+            timeline_posts = TimelinePost.select().order_by(TimelinePost.created_at.desc())
+
+            return render_template('timeline.html', 
+                                 title="Guestbook", 
+                                 timeline_posts=timeline_posts,
+                                 form_data={'name': name, 'email': email, 'content': content})
+            
+        # Then if the validation passes we'll create the post
         timeline_post = TimelinePost.create(name=name, email=email, content=content)
-        result = model_to_dict(timeline_post)
-        return result
+        flash("Your comment has been posted successfully", 'success')
+        return redirect("/timeline")
+    
     except Exception as e:
         print("Error", str(e))
         print("Exception type:", type(e).__name__)
-        return {"error": str(e)}, 400
-
+        flash('An error occurred. Please try again.', 'error')
+        return redirect('/timeline')
 
 
 # get end point of the time line

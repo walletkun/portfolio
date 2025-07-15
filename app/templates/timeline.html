@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="guestbook-section">
+    <div class="container">
+        <div class="guestbook-header">
+            <h1>Guestbook</h1>
+            <p class="subtitle">Leave a message and share your thoughts about my portfolio</p>
+        </div>
+
+        <!--- Notification flashes when passes or fails -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Comment Form -->
+        <div class="comment-form-container">
+            <h2>Leave a Comment</h2>
+            <form method="POST" action="/api/timeline_post" class="comment-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Name *</label>
+                        <input type="text" id="name" name="name" required pattern="^[a-zA-Z\s]{2,50}$"
+                            title="Name should only contain letters and spaces (2-50 characters)"
+                            placeholder="Your name" value="{{ form_data.name if form_data else '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required
+                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                            title="Please enter a valid email address" placeholder="your.email@example.com"
+                            value="{{ form_data.email if form_data else '' }}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Message *</label>
+                    <textarea id="content" name="content" rows="4" required
+                        placeholder="Share your thoughts about my work, projects, or just say hello!">{{ form_data.content if form_data else '' }}</textarea>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-comment"></i>
+                        Post Comment
+                    </button>
+            </form>
+        </div>
+
+        <!-- Comments Display -->
+        <div class="comments-container">
+            <h2>
+                Comments
+                <!-- If there is posts we'll then return the length -->
+                {% if timeline_posts %}
+                <span class="comment-count">({{ timeline_posts|length }})</span>
+                {% endif %}
+            </h2>
+
+            <div class="comments-list">
+                {% if timeline_posts %}
+                <!-- We'll render out the posts in descending -->
+                {% for post in timeline_posts %}
+                <div class="comment">
+                    <div class="comment-header">
+                        <div class="comment-avatar">
+                            {% set initials = post.name.split(' ') %}
+                            {% if initials|length > 1 %}
+                            {{ initials[0][0] }}{{ initials[1][0] }}
+                            {% else %}
+                            {{ initials[0][0] }}{{ initials[0][1] if initials[0]|length > 1 else '' }}
+                            {% endif %}
+                        </div>
+                        <div class="comment-meta">
+                            <div class="comment-author">{{ post.name }}</div>
+                            <div class="comment-date">{{ post.created_at.strftime('%B %d, %Y at %I:%M %p') }}</div>
+                        </div>
+                    </div>
+                    <div class="comment-content">{{ post.content }}</div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="no-comments">
+                    <i class="fas fa-comments"></i>
+                    <p>No comments yet. Be the first to leave a message!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
