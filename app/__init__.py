@@ -13,12 +13,19 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-generated-key-here'
 
 
-
-mydb = MySQLDatabase(os.getenv("MYSQL_DB"),
-                     user=os.getenv("MYSQL_USER"),
-                     password=os.getenv("MYSQL_PASS"),
-                     host=os.getenv("MYSQL_HOST"),
-                     port=3306)
+#flip between sqlite and mysql
+if os.getenv("TESTING") == "true":
+    print("Running in test mode")
+    mydb = SqliteDatabase('file:memory?mode=memory&cache=shared', uri=True)
+else:
+    mydb = MySQLDatabase(
+        os.getenv("MYSQL_DATABASE"),
+        user=os.getenv("MYSQL_USER"),
+        password=os.getenv("MYSQL_PASSWORD"),
+        host=os.getenv("MYSQL_HOST"),
+        port=3306
+    )
+print(mydb)
 
 class TimelinePost(Model):
     name = CharField()
@@ -166,7 +173,7 @@ def name_validation(name):
 
 def email_validation(email):
     """Validating the email of user commenting on guest book"""
-    if not email:
+    if not email or '@' not in email: #adding a check for missing @
         return False
 
     return re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email.strip())
@@ -227,15 +234,16 @@ def post_timeline_post():
 
         # validation
         errors = []
+
         if not name_validation(name):
-            errors.append("Name should only contain letters and spaces (2-50 characters)")
-
+            #errors.append("Name should only contain letters and spaces (2-50 characters)")
+            return "Invalid name", 400
         if not email_validation(email):
-            errors.append("Please enter a valid email address")
-
+            #errors.append("Please enter a valid email address")
+            return "Invalid email", 400
         if not content or len(content) < 5:
-            errors.append("Message must be at least 5 characters long")
-
+            #errors.append("Message must be at least 5 characters long")
+            return "Invalid content", 400
         print(f"Validation errors: {errors}")
 
         # if any error was caught we will flash it
@@ -254,14 +262,15 @@ def post_timeline_post():
         # Then if the validation passes we'll create the post
         timeline_post = TimelinePost.create(name=name, email=email, content=content)
         flash("Your comment has been posted successfully", 'success')
-        return redirect("/timeline")
-    
+        #return redirect("/timeline") #redirects use status code 302, which is not what we want here
+        return {"message": "Post created successfully", "post_id": timeline_post.id}, 200 
+        #just returning a success message with post id. ensures 200 status
     except Exception as e:
         print("Error", str(e))
         print("Exception type:", type(e).__name__)
         flash('An error occurred. Please try again.', 'error')
-        return redirect('/timeline')
-
+        #return redirect('/timeline')
+        return {"message": "An error occurred while creating the post"}, 500
 
 # get end point of the time line
 @app.route('/api/timeline_post', methods=['GET'])
