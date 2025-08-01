@@ -1,0 +1,27 @@
+version: "3"
+services:
+  portfolio:
+    container_name: portfolio-site
+    build: .
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+
+  mysql:
+    container_name: mysql
+    image: mariadb
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - mydatabase:/var/lib/mysql
+
+    mem_limit: 256m # limiting the ram usage
+    cpus: 0.5 #limit to half of a CPU core
+
+volumes:
+  mydatabase:
