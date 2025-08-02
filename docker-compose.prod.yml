@@ -22,6 +22,23 @@ services:
 
     mem_limit: 256m # limiting the ram usage
     cpus: 0.5 #limit to half of a CPU core
+  
+  nginx:
+    container_name: nginx
+    image: jonasal/nginx-certbot
+    restart: always
+    environment:
+      - CERTBOT_EMAIL=feilinpersonal@gmail.com
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - nginx_secrets:/etc/letsencrypt
+      - ./user_conf.d:/etc/nginx/user_conf.d
+      - ./certbot/www:/var/www/certbot
+    depends_on:
+      - portfolio
 
 volumes:
   mydatabase:
+  nginx_secrets:
