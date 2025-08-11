@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Now we're doing this with docker containers and deploy it through that
+# NO longer needed to have venv path since we're not installing through services
+
+# Project directory
+PROJECT_DIR="$HOME/portfolio"
+
+# docker compose file
+DOCKER_COMPOSE="$PROJECT_DIR/docker-compose.prod.yml"
+
+echo "Starting portfolio Docker deployment...."
+
+# changing the directory to the portfolio directory
+cd "$PROJECT_DIR"
+
+# getting the latest code
+git fetch && git reset origin/main --hard
+
+# building the new container image first 
+# checking if the build was successful then we continue with deployment
+echo "Building the Docker image for testing..."
+if ! docker compose -f "$DOCKER_COMPOSE" build; then
+    echo "Docker image build failed. Stopping deployment..."
+    exit 1
+fi 
+
+echo "Build successful. Proceeding with the deployment..."
+
+# spin down and up using docker compose
+docker compose -f "$DOCKER_COMPOSE" down
+docker compose -f "$DOCKER_COMPOSE" up -d --build
+
+
+echo "Done. Visit http://walletkun.duckdns.org to view the site."
