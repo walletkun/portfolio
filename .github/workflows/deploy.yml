@@ -9,7 +9,41 @@ on:
 
 
 jobs:
+  test:
+    name: "Python VENV Test"
+    runs-on: ubuntu-latest
+    env:
+      TESTING: true
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: "Setup Python Environment"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.1'
+
+      - name: "Setup Python Virtual Environment"
+        run: python -m venv py3
+
+      - name: "Installing Dependencies"
+        run: |
+             source py3/bin/activate
+             pip install -r requirements.txt
+      
+      - name: "Run Tests"
+        run: ./run_test.sh
+
+      - name: "Send Notification to Discord if test fails"
+        if: failure()
+        run: |
+             curl -s -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
+             -d "content=Tests Failed"
+
+
   deploy:
+    # Only allow deployment when the test passes
+    needs: test
     name: "Deploy to VPS"
     runs-on: ubuntu-latest
     steps:
@@ -33,4 +67,19 @@ jobs:
 
       - name: Deploy Site
         run: ssh my-vps "~/redeploy-site"
+
+      - name: "Print Container Status"
+        run: ssh my-vps "cd ~/portfolio && docker compose ps"
+      
+      - name: "Send Discord Notification on Deployment Success"
+        run: |
+             curl -s -X POST "{{ secrets.DISCORD_WEBHOOK }}" \
+             -d "content=🚀 Deployment Successful"
+
+      - name: "Send Discord Notification on Deployment Failure"
+        if: failure()
+        run: |
+             curl -s -X POST "{{ secrets.DISCORD_WEBHOOK }}" \
+             -d "content=Deployment Failed"
+
 
