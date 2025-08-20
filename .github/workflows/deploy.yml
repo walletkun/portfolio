@@ -75,9 +75,9 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-             curl -s -X POST "$DISCORD_WEBHOOK" \
-             -H "Content-Type: application/json" \
-             -d "content=🚀 Deployment Successful"
+          curl -s -X POST "$DISCORD_WEBHOOK" \
+          -H "Content-Type: application/json" \
+          -d '{"content":"Deployment Successful"}'
 
       - name: "Send Discord Notification on Deployment Failure"
         env:
