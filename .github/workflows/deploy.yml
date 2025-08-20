@@ -72,14 +72,20 @@ jobs:
         run: ssh my-vps "cd ~/portfolio && docker compose ps"
       
       - name: "Send Discord Notification on Deployment Success"
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-             curl -s -X POST "{{ secrets.DISCORD_WEBHOOK }}" \
+             curl -s -X POST "$DISCORD_WEBHOOK" \
+             -H "Content-Type: application/json" \
              -d "content=🚀 Deployment Successful"
 
       - name: "Send Discord Notification on Deployment Failure"
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         if: failure()
         run: |
-             curl -s -X POST "{{ secrets.DISCORD_WEBHOOK }}" \
+             curl -s -X POST "$DISCORD_WEBHOOK" \
+             -H "Content-Type: application/json" \
              -d "content=Deployment Failed"
 
 
